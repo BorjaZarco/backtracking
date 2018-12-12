@@ -20,21 +20,28 @@ module.exports = class {
     // false if there are no more combinations to calculate
     hasNext () {
         let last = this.combinationSize-1
-        if (this.currentCombination[last] < this.setSize - this.combinationSize + last) {
+        
+        // First Combination
+        if (this.currentCombination[last] === -1) {
             this.currentCombination[last]++;
+            return true;
+        }
+        if (this.currentCombination[last] < this.setSize - this.combinationSize + last 
+            && isValidCombination(this.set, this.currentCombination, last+2, this.limitValue)) {
+          this.currentCombination[last]++;
         } else {
-            let j = last;
-            while (this.currentCombination[j] === this.setSize - this.combinationSize + j ||
-                 ! isValidCombination(this.set, this.currentCombination, j, this.limitValue)) {
-                if (j <= 0) {
-                    return false;
-                }
-                j--;
+          let j = last;
+          while (this.currentCombination[j] === this.setSize - this.combinationSize + j 
+            || !isValidCombination(this.set, this.currentCombination, j, this.limitValue)) {
+            if (j <= 0) {
+              return false;
             }
-            this.currentCombination[j]++;                
-            for (let k = j+1; k < this.combinationSize; k++) {
-                this.currentCombination[k] = this.currentCombination[k - 1] + 1;
-            }
+            j--;
+          }
+          this.currentCombination[j]++;
+          for (let k = j + 1; k < this.combinationSize; k++) {
+            this.currentCombination[k] = this.currentCombination[k - 1] + 1;
+          }
         }
         return true
     }
@@ -57,7 +64,7 @@ module.exports = class {
     }
 }
 
-function isValidCombination (set, combination, to, limitValue) {
+function isValidCombination (set, combination, to, limitValue) {    
     const comb = combination.slice(0, to+1);
     const hand = comb.map(item => set[item]);   
     return hand.reduce(((value, handCard) => (value + handCard)), 0) <= limitValue;

@@ -39,7 +39,7 @@ module.exports = class {
         const endTime = parseInt(process.hrtime.bigint())/1e6;
         const total = iterator.getTotalNumberOfCombinations();
         return { 
-            probability: ((wins / total) * 100).toFixed(2), 
+            probability: ((wins / total) * 100).toFixed(6), 
             benchmark: (endTime - startTime).toFixed(2), 
             iterations: plays, 
             total: total 
